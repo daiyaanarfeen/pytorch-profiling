@@ -318,6 +318,7 @@ setup_commands:
     - sed '3 s/./#&/' /etc/hosts > hosts && cat hosts > /etc/hosts && rm hosts
     - cp -r /mnt/nccl-tests /home/testuser && chown -R testuser /home/testuser/nccl-tests 
     - su - testuser -c "cd && source .bashrc && cd nccl-tests && make MPI=1 MPI_HOME=/home/testuser/miniconda3/pkgs/mpich-3.2.1-h1c2f66e_1007/"
+    - mkdir ~/.ssh && cp /mnt/id_rsa* ~/.ssh
       #    - ssh-copy-id
 
 # Custom commands that will be run on the head node after common setup.
