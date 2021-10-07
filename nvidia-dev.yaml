@@ -294,7 +294,7 @@ initialization_commands: []
 
 # List of shell commands to run to set up nodes.
 setup_commands:
-    - apt-get update && apt-get install vim git wget binutils zlib1g-dev rsync curl apt-transport-https ca-certificates build-essential -y
+    - apt-get update && apt-get install numactl vim git wget binutils zlib1g-dev rsync curl apt-transport-https ca-certificates build-essential -y
     - curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
     - echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
     - apt-get update && apt-get install -y kubectl

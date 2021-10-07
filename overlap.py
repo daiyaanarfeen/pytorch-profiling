@@ -48,7 +48,6 @@ def init_process(fn, log_dir):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-#    parser.add_argument("--local_rank", type=int)
     parser.add_argument("--log_dir", type=str)
     parser.add_argument("--master_addr", type=str)
     parser.add_argument("--master_port", type=str)
@@ -61,6 +60,5 @@ if __name__ == "__main__":
     os.environ["WORLD_SIZE"] = args.world_size
     os.environ["RANK"] = args.rank
 
-#    torch.cuda.set_device(args.local_rank)
     torch.cuda.set_device(int(args.rank) % 8)
     init_process(run, args.log_dir)
