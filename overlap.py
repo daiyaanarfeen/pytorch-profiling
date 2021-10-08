@@ -10,7 +10,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.multiprocessing as mp
 
 """ All-Reduce example."""
-def run(log_dir):
+def run(log_dir, batch_size):
     """ Simple collective communication. """
     rank = dist.get_rank()
     model = torchvision.models.resnet18() 
@@ -18,7 +18,7 @@ def run(log_dir):
     ddp_model = DDP(model, device_ids=[rank], broadcast_buffers=False, bucket_cap_mb=25)
     loss_fn = nn.MSELoss()
     optimizer = optim.SGD(ddp_model.parameters(), lr=0.001)
-    bs = 256
+    bs = batch_size[0] if len(batch_size) == 1 else batch_size[rank]
     inputs = torch.randn(bs, 3, 224, 224).to(rank)
     labels = torch.randn(bs, 1000).to(rank)
 
@@ -39,10 +39,10 @@ def run(log_dir):
     print('success')
 
 
-def init_process(fn, log_dir):
+def init_process(fn, log_dir, batch_size):
     """ Initialize the distributed environment. """
     dist.init_process_group(backend='nccl', init_method='env://')
-    fn(log_dir)
+    fn(log_dir, batch_size)
     dist.destroy_process_group()
 
 
@@ -53,6 +53,7 @@ if __name__ == "__main__":
     parser.add_argument("--master_port", type=str)
     parser.add_argument("--world_size", type=str)
     parser.add_argument("--rank", type=str)
+    parser.add_argument("--batch_size", type=int, nargs="+") # always a list
     args = parser.parse_args()
 
     os.environ["MASTER_ADDR"] = args.master_addr
@@ -60,5 +61,4 @@ if __name__ == "__main__":
     os.environ["WORLD_SIZE"] = args.world_size
     os.environ["RANK"] = args.rank
 
-    torch.cuda.set_device(int(args.rank) % 8)
-    init_process(run, args.log_dir)
+    init_process(run, args.log_dir, args.batch_size)
