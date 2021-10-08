@@ -14,13 +14,13 @@ def run(log_dir, batch_size):
     """ Simple collective communication. """
     rank = dist.get_rank()
     model = torchvision.models.resnet18() 
-    model.to(rank)
-    ddp_model = DDP(model, device_ids=[rank], broadcast_buffers=False, bucket_cap_mb=25)
+    model.cuda()
+    ddp_model = DDP(model, broadcast_buffers=False, bucket_cap_mb=25)
     loss_fn = nn.MSELoss()
     optimizer = optim.SGD(ddp_model.parameters(), lr=0.001)
     bs = batch_size[0] if len(batch_size) == 1 else batch_size[rank]
-    inputs = torch.randn(bs, 3, 224, 224).to(rank)
-    labels = torch.randn(bs, 1000).to(rank)
+    inputs = torch.randn(bs, 3, 224, 224).cuda()
+    labels = torch.randn(bs, 1000).cuda()
 
 
     with torch.profiler.profile(
@@ -53,6 +53,7 @@ if __name__ == "__main__":
     parser.add_argument("--master_port", type=str)
     parser.add_argument("--world_size", type=str)
     parser.add_argument("--rank", type=str)
+    parser.add_argument("--device", type=int)
     parser.add_argument("--batch_size", type=int, nargs="+") # always a list
     args = parser.parse_args()
 
@@ -61,4 +62,5 @@ if __name__ == "__main__":
     os.environ["WORLD_SIZE"] = args.world_size
     os.environ["RANK"] = args.rank
 
+    torch.cuda.set_device(args.device)
     init_process(run, args.log_dir, args.batch_size)
