@@ -28,29 +28,29 @@ tt = []
 
 if args.block == 'attn':
     model = attn.cuda()
-    for i in range(1):
+    for i in range(100):
         src = torch.rand(seq_len, batch_size // data_parallel_x, hidden).cuda()
         with profile(activities=[
                 ProfilerActivity.CPU, ProfilerActivity.CUDA], record_shapes=True) as prof:
             with record_function("forward_pass"):
                 output = model(src, src, src)
         tt.append(float(prof.key_averages().total_average().self_cuda_time_total_str[:-2]))
-        print(torch.cuda.memory_allocated())
+#        print(torch.cuda.memory_allocated())
 
 elif args.block == 'mlp':
     model = mlp.cuda()
-    for i in range(1):
+    for i in range(100):
         src = torch.rand(seq_len, batch_size // data_parallel_x, hidden).cuda()
         with profile(activities=[
                 ProfilerActivity.CPU, ProfilerActivity.CUDA], record_shapes=True) as prof:
             with record_function("forward_pass"):
                 output = model(src)
         tt.append(float(prof.key_averages().total_average().self_cuda_time_total_str[:-2]))
-        print(torch.cuda.memory_allocated())
+#        print(torch.cuda.memory_allocated())
 
-seq_proc = 1 * batch_size / data_parallel_x
+seq_proc = 100 * batch_size / data_parallel_x
 tokens_proc = seq_proc * seq_len
-#print(tokens_proc / sum(tt))
+print(1000 * tokens_proc / sum(tt))
 
 
 
