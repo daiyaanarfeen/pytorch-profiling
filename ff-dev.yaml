@@ -315,6 +315,12 @@ setup_commands:
     - git config --global user.name "Daiyaan Arfeen"
     - git config --global user.email daiyaanarfeen@cmu.edu
     - echo "export LC_ALL=C.UTF-8 && export LANG=C.UTF-8" >> ~/.bashrc
+    - apt remove --purge --auto-remove cmake -y
+    - apt update && apt install -y software-properties-common lsb-release && apt clean all
+    - wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+    - apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
+    - apt update && apt install kitware-archive-keyring -y && rm /etc/apt/trusted.gpg.d/kitware.gpg
+    - apt update && apt install cmake -y
               #    - ssh-copy-id
 
 # Custom commands that will be run on the head node after common setup.
