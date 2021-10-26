@@ -298,31 +298,24 @@ setup_commands:
     - curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
     - echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
     - apt-get update && apt-get install -y kubectl
-    - wget https://repo.continuum.io/miniconda/Miniconda3-4.7.10-Linux-x86_64.sh
-    - wget https://content.mellanox.com/ofed/MLNX_OFED-4.9-3.1.5.0/MLNX_OFED_LINUX-4.9-3.1.5.0-ubuntu18.04-x86_64.tgz
-    - bash /Miniconda3-4.7.10-Linux-x86_64.sh -b -f 
-    - echo 'eval "$(~/miniconda3/bin/conda shell.bash hook)"' >> ~/.bashrc && source ~/.bashrc && conda update conda -y && conda install pip -y
-    - pip install -U ray==1.0.0 kubernetes torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
-    - useradd testuser && echo 'testuser:testuser' | chpasswd && chsh -s /bin/bash testuser && mkdir /home/testuser
+    - useradd testuser && echo 'testuser:testuser' | chpasswd && chsh -s /bin/bash testuser && mkdir /home/testuser && chown -R testuser /home/testuser
     - touch /home/testuser/.bashrc && echo "export PATH=$PATH" >> /home/testuser/.bashrc && echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> /home/testuser/.bashrc
-    - cp /Miniconda3-4.7.10-Linux-x86_64.sh /home/testuser/ && chown -R testuser /home/testuser
     - apt-get install sudo -y && usermod -aG sudo testuser 
     - apt-get install openssh-server openssh-client -y && service ssh start 
     - su - testuser -c "ssh-keygen -q -t rsa -N '' -f /home/testuser/.ssh/id_rsa <<<y >/dev/null 2>&1"
-    - su - testuser -c "bash ~/Miniconda3-4.7.10-Linux-x86_64.sh -b"
-    - echo 'eval "$(/home/testuser/miniconda3/bin/conda shell.bash hook)"' >> /home/testuser/.bashrc && source /home/testuser/.bashrc
-    - su - testuser -c "source ~/.bashrc && conda install -c conda-forge/label/gcc7 mpich -y"
-    - echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/testuser/miniconda3/pkgs/libgfortran-ng-7.3.0-hdf63c60_0/lib/:/home/testuser/miniconda3/pkgs/mpich-3.2.1-h1c2f66e_1007/lib/" >> /home/testuser/.bashrc
     - awk '{sub(/#Port 22/,"Port 8181")}1' /etc/ssh/sshd_config > ssh_config_new && mv ssh_config_new /etc/ssh/sshd_config && service ssh restart
     - echo Host pho* >> /home/testuser/.ssh/config && echo Port 8181 >> /home/testuser/.ssh/config
     - sed '3 s/./#&/' /etc/hosts > hosts && cat hosts > /etc/hosts && rm hosts
-    - cp -r /mnt/nccl-tests /home/testuser && chown -R testuser /home/testuser/nccl-tests 
-    - su - testuser -c "cd && source .bashrc && cd nccl-tests && make MPI=1 MPI_HOME=/home/testuser/miniconda3/pkgs/mpich-3.2.1-h1c2f66e_1007/"
+    - apt-get install python3-pip libjpeg-dev zlib1g-dev -y
+    - cp /usr/bin/python3 /usr/bin/python && cp /usr/bin/pip3 /usr/bin/pip
+    - pip install -U ray==1.0.0 kubernetes #torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+    - apt install mpich -y
     - mkdir ~/.ssh && cp /mnt/id_rsa* ~/.ssh
     - chmod 400 ~/.ssh/id_rsa
     - git config --global user.name "Daiyaan Arfeen"
     - git config --global user.email daiyaanarfeen@cmu.edu
-      #    - ssh-copy-id
+    - echo "export LC_ALL=C.UTF-8 && export LANG=C.UTF-8" >> ~/.bashrc
+              #    - ssh-copy-id
 
 # Custom commands that will be run on the head node after common setup.
 head_setup_commands: []
