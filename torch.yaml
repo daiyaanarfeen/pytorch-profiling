@@ -312,12 +312,11 @@ setup_commands:
     - su - testuser -c "bash ~/Miniconda3-4.7.10-Linux-x86_64.sh -b"
     - echo 'eval "$(/home/testuser/miniconda3/bin/conda shell.bash hook)"' >> /home/testuser/.bashrc && source /home/testuser/.bashrc
     - su - testuser -c "source ~/.bashrc && conda install -c conda-forge/label/gcc7 mpich -y"
+    - su - testuser -c "source ~/.bashrc && conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch && pip install torch-tb-profiler"
     - echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/testuser/miniconda3/pkgs/libgfortran-ng-7.3.0-hdf63c60_0/lib/:/home/testuser/miniconda3/pkgs/mpich-3.2.1-h1c2f66e_1007/lib/" >> /home/testuser/.bashrc
     - awk '{sub(/#Port 22/,"Port 8181")}1' /etc/ssh/sshd_config > ssh_config_new && mv ssh_config_new /etc/ssh/sshd_config && service ssh restart
     - echo Host pho* >> /home/testuser/.ssh/config && echo Port 8181 >> /home/testuser/.ssh/config
     - sed '3 s/./#&/' /etc/hosts > hosts && cat hosts > /etc/hosts && rm hosts
-    - cp -r /mnt/nccl-tests /home/testuser && chown -R testuser /home/testuser/nccl-tests 
-    - su - testuser -c "cd && source .bashrc && cd nccl-tests && make MPI=1 MPI_HOME=/home/testuser/miniconda3/pkgs/mpich-3.2.1-h1c2f66e_1007/"
     - mkdir ~/.ssh && cp /mnt/id_rsa* ~/.ssh
     - chmod 400 ~/.ssh/id_rsa
     - git config --global user.name "Daiyaan Arfeen"
