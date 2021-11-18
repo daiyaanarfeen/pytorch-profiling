@@ -130,7 +130,7 @@ head_node:
             component: ray-head
     spec:
         nodeSelector:
-            nodetype: phortx
+            nodetype: phodgx
             #            kubernetes.io/hostname: phortx1
 
         # Change this if you altered the autoscaler_service_account above
@@ -312,7 +312,7 @@ setup_commands:
     - su - testuser -c "bash ~/Miniconda3-4.7.10-Linux-x86_64.sh -b"
     - echo 'eval "$(/home/testuser/miniconda3/bin/conda shell.bash hook)"' >> /home/testuser/.bashrc && source /home/testuser/.bashrc
     - su - testuser -c "source ~/.bashrc && conda install -c conda-forge/label/gcc7 mpich -y"
-    - su - testuser -c "source ~/.bashrc && conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch && pip install torch-tb-profiler"
+    - su - testuser -c "source ~/.bashrc && conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia -y && pip install torch-tb-profiler"
     - echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/testuser/miniconda3/pkgs/libgfortran-ng-7.3.0-hdf63c60_0/lib/:/home/testuser/miniconda3/pkgs/mpich-3.2.1-h1c2f66e_1007/lib/" >> /home/testuser/.bashrc
     - awk '{sub(/#Port 22/,"Port 8181")}1' /etc/ssh/sshd_config > ssh_config_new && mv ssh_config_new /etc/ssh/sshd_config && service ssh restart
     - echo Host pho* >> /home/testuser/.ssh/config && echo Port 8181 >> /home/testuser/.ssh/config
