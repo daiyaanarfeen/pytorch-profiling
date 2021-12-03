@@ -4,3 +4,6 @@
 [submodule "NCF"]
 	path = NCF
 	url = https://github.com/guoyang9/NCF.git
+[submodule "deepspeech2"]
+	path = deepspeech2
+	url = https://github.com/sooftware/deepspeech2.git
