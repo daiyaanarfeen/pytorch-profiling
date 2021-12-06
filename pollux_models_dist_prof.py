@@ -8,6 +8,7 @@ import torch.distributed as dist
 import torch.profiler
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.multiprocessing as mp
+from deepspeech2 import DeepSpeech2
 
 """ All-Reduce example."""
 def run(log_dir, batch_size, model):
