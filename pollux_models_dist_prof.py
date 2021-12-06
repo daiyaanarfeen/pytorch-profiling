@@ -20,8 +20,19 @@ def run(log_dir, batch_size, model):
         loss_fn = nn.MSELoss()
         inputs = torch.randn(bs, 3, 224, 224).cuda()
         labels = torch.randn(bs, 1000).cuda()
+
+        grad_calc = lambda: loss_fn(ddp_model(inputs), labels).backward()
     elif model == 'deepspeech2':
-        pass
+        model = DeepSpeech2(num_classes=10, input_dim=80)
+        criterion = nn.CTCLoss(blank=3, zero_infinity=True)
+        input_lengths = np.random.normal(203021.64294474229, 57193.452740676534, 100).astype(int)
+        target_lengths = np.random.normal(184.65321139493324, 58.645652429691275, 100).astype(int)
+        inputs = torch.rand(bs, max(input_lengths), 80).cuda()
+        targets = torch.randint(0, 10, [bs, max(target_lengths)]).cuda()
+
+        forward = lambda: ddp_model(inputs, input_lengths)
+        loss = lambda outputs: criterion(outputs[0], targets, outputs[1], target_lengths)
+        grad_calc = lambda: loss(forward()).backward()
     elif model == 'yolov3':
         pass
     elif model == 'ncf':
@@ -40,8 +51,7 @@ def run(log_dir, batch_size, model):
     ) as prof:
         for i in range(10):
             optimizer.zero_grad()
-            outputs = ddp_model(inputs)
-            loss_fn(outputs, labels).backward()
+            grad_calc()
             optimizer.step()
             prof.step()
 
