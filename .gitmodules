@@ -7,3 +7,4 @@
 [submodule "kospeech"]
 	path = kospeech
 	url = git@github.com:daiyaanarfeen/kospeech.git
+	branch = latest
