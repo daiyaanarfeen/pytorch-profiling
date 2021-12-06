@@ -6,4 +6,4 @@
 	url = https://github.com/guoyang9/NCF.git
 [submodule "kospeech"]
 	path = kospeech
-	url = https://github.com/sooftware/kospeech.git
+	url = git@github.com:daiyaanarfeen/kospeech.git
