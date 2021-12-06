@@ -4,6 +4,3 @@
 [submodule "NCF"]
 	path = NCF
 	url = https://github.com/guoyang9/NCF.git
-[submodule "deepspeech.pytorch"]
-	path = deepspeech.pytorch
-	url = https://github.com/SeanNaren/deepspeech.pytorch.git
