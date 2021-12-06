@@ -4,3 +4,6 @@
 [submodule "NCF"]
 	path = NCF
 	url = https://github.com/guoyang9/NCF.git
+[submodule "kospeech"]
+	path = kospeech
+	url = https://github.com/sooftware/kospeech.git
