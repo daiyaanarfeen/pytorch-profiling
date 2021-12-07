@@ -1,0 +1,10 @@
+[submodule "yolov3"]
+	path = yolov3
+	url = https://github.com/ultralytics/yolov3.git
+[submodule "NCF"]
+	path = NCF
+	url = https://github.com/guoyang9/NCF.git
+[submodule "kospeech"]
+	path = kospeech
+	url = git@github.com:daiyaanarfeen/kospeech.git
+	branch = latest
